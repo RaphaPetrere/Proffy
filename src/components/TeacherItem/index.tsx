@@ -3,33 +3,56 @@ import React from 'react';
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg'
 
 import './styles.css'
+import api from '../../services/api';
 
-function TeacherItem(){
+export interface Teacher {
+    id: number,
+    name: string,
+    avatar: string,
+    bio: string,
+    cost: number,
+    subject: string,
+    whatsapp: string,
+}
+
+interface TeacherItemProps {
+    teacher: Teacher;
+}
+
+const TeacherItem: React.FunctionComponent<TeacherItemProps> = ({ teacher }) => {
+
+    function createNewConnection() {
+        api.post('connections', {
+            user_id : teacher.id,
+        })
+    }
     return(
         <article className="teacher-item">
             <header>
-                <img src="https://avatars1.githubusercontent.com/u/56046074?s=460&u=e93b47748987aee9f64542c374a946c4eb216556&v=4" alt="Raphael Cardoso Petrére"></img>
+                <img src={teacher.avatar} alt={teacher.name}></img>
                 <div>
-                    <strong>Raphael Cardoso Petrére</strong>
-                    <span>Frontend</span>
+                    <strong>{teacher.name}</strong>
+                    <span>{teacher.subject}</span>
                 </div>
             </header>
 
             <p>
-                O melhor programador que você vai encontrar na sua vida.
-                <br /> <br />
-                Depois de tantos cursos e uma faculdade, finalmente estou apto para te ensinar o que você precisa para poder ser o melhor programador no seu bairro.
+                {teacher.bio}
             </p>
 
             <footer>
                 <p>
                     Preço/hora
-                    <strong>R$ 100,00</strong>
+                    <strong>R$ {teacher.cost}</strong>
                 </p>
-                <button type="button">
+                <a 
+                    target="_blank" 
+                    onClick={createNewConnection} 
+                    href={`https://wa.me/${teacher.whatsapp}`}
+                >
                     <img src={whatsappIcon} alt="Whatsapp"/>
                     Entrar em contato
-                </button>
+                </a>
             </footer>
         </article>
     );
